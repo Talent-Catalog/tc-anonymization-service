@@ -87,6 +87,6 @@ variable "tc_api_username" {
   description = "Talent Catalog username used by tc-api"
 }
 
-variable "acm_certificate_arn" {
-  description = "The ARN of an ACM certificate"
+variable "site_domain" {
+  description = "The domain name for the ACM certificate (e.g. skills.staging.example.org)"
 }

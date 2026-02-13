@@ -12,10 +12,6 @@ terraform {
   }
 }
 
-provider "aws" {
-  region = local.region
-}
-
 data "aws_availability_zones" "available" {}
 
 locals {
@@ -413,7 +409,7 @@ module "alb" {
       port            = 443
       protocol        = "HTTPS"
       ssl_policy      = "ELBSecurityPolicy-2016-08"
-      certificate_arn = var.acm_certificate_arn
+      certificate_arn = aws_acm_certificate_validation.this.certificate_arn
 
       forward = {
         target_group_key = "ex_ecs"

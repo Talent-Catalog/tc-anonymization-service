@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
 module tc-test {
   source = "./.."
   project_name = "tc-api"
@@ -19,7 +23,7 @@ module tc-test {
   tc_api_url = "https://tctalent-test.org/api/admin"
   tc_api_search_id = 2682
   tc_api_username = "tc-api"
-  acm_certificate_arn = "arn:aws:acm:us-east-1:231168606641:certificate/3a502945-f505-46f9-aa08-523c2be2593d"
+  site_domain = "test.api.tctalent.org"
 }
 
 terraform {
