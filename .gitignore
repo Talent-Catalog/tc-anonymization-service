@@ -41,3 +41,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Generated files
+/src/main/generated
