@@ -44,3 +44,13 @@ out/
 
 # Generated files
 /src/main/generated
+
+# Terraform
+/infra/terraform/tc-skills-service-opc-prod/tfplan
+/infra/terraform/tc-skills-service-opc-test/tfplan
+/infra/terraform/tc-skills-service-prod/tfplan
+/infra/terraform/tc-skills-service-test/tfplan
+/infra/terraform/tc-skills-service-opc-prod/.terraform/
+/infra/terraform/tc-skills-service-opc-test/.terraform/
+/infra/terraform/tc-skills-service-prod/.terraform/
+/infra/terraform/tc-skills-service-test/.terraform/
