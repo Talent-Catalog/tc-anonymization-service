@@ -121,11 +121,9 @@ variable "doc_db_password" {
 variable "batch_size" {
   description = "Batch size for batch jobs (BATCH_SIZE in SSM)"
   type        = string
-  default     = ""
 }
 
 variable "batch_interval_ms" {
   description = "Batch interval in ms (BATCH_INTERVAL_MS in SSM)"
   type        = string
-  default     = ""
 }
