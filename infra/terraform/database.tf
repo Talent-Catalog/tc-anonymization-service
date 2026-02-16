@@ -18,6 +18,7 @@ module "db" {
   publicly_accessible = true
 
   master_username = var.db_user_name
+  master_password = var.database_password != "" ? var.database_password : null
   database_name   = var.db_name
 
   vpc_id               = module.vpc.vpc_id
