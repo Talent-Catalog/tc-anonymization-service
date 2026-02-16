@@ -14,29 +14,35 @@ provider "aws" {
 # tc-api infrastructure for OPC AWS staging account
 module tc-opc-test {
   source = "./.."
-  project_name = "tc-api"
+
+  # Provided as Terraform inputs
+  project_name        = "tc-api"
   project_description = "OPC staging setup for tc-api"
-  image_tag = "1.0.1-SNAPSHOT"
-  fargate_cpu = 512
-  fargate_memory = 2048
-  db_name = "tcapi"
-  db_user_name = "tcapi"
-  db_instance_class = "db.t3.medium" # smallest test instance available for aurora
-  db_version = "17.5"
-  doc_db_name = "tcapi"
-  doc_db_user_name = "tcapi"
-  doc_db_password = ""
-  # Update with OPC staging MongoDB Atlas cluster hostname when available
-  doc_db_cluster_name = "staging.c8pam.mongodb.net"
-  dns_namespace = "tc-api.local"
-  app_port = 8082
-  health_check_path = "/actuator/health"
-  # Update with OPC staging Talent Catalog API URL when available
-  tc_api_url = "https://tctalent-test.org/api/admin"
+  environment         = "opc-staging"
+  image_tag           = "1.0.1-SNAPSHOT"
+  fargate_cpu         = 512
+  fargate_memory      = 2048
+  app_port            = 8082
+  health_check_path   = "/actuator/health"
+  db_name             = "tcapi"
+  db_user_name        = "tcapi"
+  db_instance_class   = "db.t3.medium"
+  db_version          = "17.5"
+  dns_namespace       = "tc-api.local"
+  site_domain         = "test.api.plus.tctalent.org"
+
+  # SSM-backed (stored and managed in SSM, injected into ECS) – set via ssm-parameters.sh
+  tc_api_url       = "https://tctalent-test.org/api/admin"
   tc_api_search_id = 2682
-  tc_api_username = "tc-api"
-  # Replace with ACM certificate ARN from the OPC AWS staging account (us-east-1)
-  site_domain = "test.api.plus.tctalent.org"
+  tc_api_username  = "tc-api"
+  tc_api_password     = "" # set via ssm-parameters.sh
+  database_password   = "" # set via ssm-parameters.sh; must match RDS if set
+  doc_db_cluster_name = "staging.c8pam.mongodb.net"
+  doc_db_name         = "tcapi"
+  doc_db_user_name    = "tcapi"
+  doc_db_password     = "" # set via ssm-parameters.sh
+  batch_size          = "100"
+  batch_interval_ms   = "5000"
 }
 
 # Configure the opc-staging terraform workspace
