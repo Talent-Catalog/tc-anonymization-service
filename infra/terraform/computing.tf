@@ -50,7 +50,7 @@ module "ecs_service" {
   source = "terraform-aws-modules/ecs/aws//modules/service"
   version = "5.12.0"
 
-  depends_on = [module.db]
+  depends_on = [module.db, aws_ssm_parameter.database_url]
 
   name        = local.name
   cluster_arn = module.ecs_cluster.arn
@@ -58,10 +58,24 @@ module "ecs_service" {
   cpu    = var.fargate_cpu
   memory = var.fargate_memory
 
+  # Allow task execution role to read SSM parameters (injected as secrets)
+  task_exec_ssm_param_arns = [
+    aws_ssm_parameter.tc_api_url.arn,
+    aws_ssm_parameter.tc_api_search_id.arn,
+    aws_ssm_parameter.tc_api_username.arn,
+    aws_ssm_parameter.tc_api_password.arn,
+    aws_ssm_parameter.database_url.arn,
+    aws_ssm_parameter.database_username.arn,
+    aws_ssm_parameter.database_password.arn,
+    aws_ssm_parameter.mongo_url.arn,
+    aws_ssm_parameter.batch_size.arn,
+    aws_ssm_parameter.batch_interval_ms.arn,
+  ]
+
   # Enables ECS Exec
   enable_execute_command = true
 
-  # Container definition(s)
+  # Container definition(s) – secrets from SSM; no sensitive env vars in task def
   container_definitions = {
 
     (local.container_name) = {
@@ -79,45 +93,18 @@ module "ecs_service" {
         }
       ]
 
-      environment = [
-        {
-          name  = "DATABASE_URL"
-          value = "jdbc:postgresql://${module.db.cluster_endpoint}/${var.db_name}"
-        },
-        {
-          name  = "DATABASE_USERNAME"
-          value = var.db_user_name
-        },
-        {
-          name  = "DATABASE_PASSWORD"
-          value = ""
-        },
-        {
-          name  = "MONGO_URL"
-          value = format(
-            "mongodb+srv://%s:%s@%s/%s?retryWrites=true&w=majority&appName=staging",
-            var.doc_db_user_name,
-            var.doc_db_password,
-            var.doc_db_cluster_name,
-            var.doc_db_name,
-          )
-        },
-        {
-          name  = "TC_API_URL"
-          value = var.tc_api_url
-        },
-        {
-          name  = "TC_SEARCH_ID"
-          value = var.tc_api_search_id
-        },
-        {
-          name  = "TC_USERNAME"
-          value = var.tc_api_username
-        },
-        {
-          name  = "TC_PASSWORD"
-          value = ""
-        },
+      # Injected from SSM (path: /${var.project_name}/${var.environment}/...)
+      secrets = [
+        { name = "TC_API_URL", valueFrom = aws_ssm_parameter.tc_api_url.arn },
+        { name = "TC_SEARCH_ID", valueFrom = aws_ssm_parameter.tc_api_search_id.arn },
+        { name = "TC_API_USERNAME", valueFrom = aws_ssm_parameter.tc_api_username.arn },
+        { name = "TC_PASSWORD", valueFrom = aws_ssm_parameter.tc_api_password.arn },
+        { name = "DATABASE_URL", valueFrom = aws_ssm_parameter.database_url.arn },
+        { name = "DATABASE_USERNAME", valueFrom = aws_ssm_parameter.database_username.arn },
+        { name = "DATABASE_PASSWORD", valueFrom = aws_ssm_parameter.database_password.arn },
+        { name = "MONGO_URL", valueFrom = aws_ssm_parameter.mongo_url.arn },
+        { name = "BATCH_SIZE", valueFrom = aws_ssm_parameter.batch_size.arn },
+        { name = "BATCH_INTERVAL_MS", valueFrom = aws_ssm_parameter.batch_interval_ms.arn },
       ]
 
       # Example image used requires access to write to root filesystem
