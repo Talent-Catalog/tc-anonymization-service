@@ -18,48 +18,35 @@ terraform init
 
 ## 2. Deploy infrastructure
 
-```bash
-terraform plan
-terraform apply
-```
-
-This creates the VPC, RDS Aurora cluster, ECS cluster/service, ALB, Route53 zone, ACM certificate, 
-and SSM parameters.
-
-SSM parameters for non-secret values (TC_API_URL, TC_SEARCH_ID, batch tuning, etc.) are populated 
-by Terraform directly from `main.tf` inputs.
-
-## 3. Set secret SSM parameters
-
-After `terraform apply` completes, run `ssm-parameters.sh` to write the secret values that are not 
-stored in Terraform state.
-
-The script requires three environment variables for the secrets:
-
-| Variable | Description |
-|---|---|
-| `TC_PASSWORD` | Talent Catalog API password |
-| `DATABASE_PASSWORD` | RDS Aurora master password |
-| `MONGO_URL` | Full MongoDB Atlas connection URI |
-
-Run the script:
+Pass the three secrets at apply time. Terraform sets them on the relevant resources (RDS, SSM) in 
+one step -- no manual SSM commands needed afterwards.
 
 ```bash
-TC_PASSWORD="..." \
-DATABASE_PASSWORD="..." \
-MONGO_URL="mongodb+srv://user:pass@cluster/db?..." \
-./ssm-parameters.sh
+terraform plan \
+  -var 'database_password=<db-password>' \
+  -var 'doc_db_password=<mongo-password>' \
+  -var 'tc_password=<tc-password>' \
+  -out tfplan
+
+terraform apply tfplan
 ```
 
-The script will verify it is running against the expected AWS account before writing any parameters.
+This creates all infrastructure (VPC, RDS Aurora, ECS, ALB, Route53, ACM) and populates all SSM 
+parameters with real values:
 
-## When to re-run ssm-parameters.sh
+- `database_password` sets both the RDS Aurora master password and the `DATABASE_PASSWORD` SSM parameter
+- `doc_db_password` is combined with the other MongoDB vars to build the full `MONGO_URL` SSM parameter
+- `tc_password` sets the `TC_PASSWORD` SSM parameter
 
-- **First deploy** -- always run after the initial `terraform apply`
-- **Secret rotation** -- whenever a password or connection string changes (doesn't have to be done 
-  through the script, e.g. you could rotate the database password in the RDS console and then update 
-  the SSM parameter directly in the AWS console without using the script)
-- **Parameter updates** -- if you want to update any of the parameters that are set by the script (e.g. 
-  TC_SEARCH_ID, batch tuning parameters) without changing Terraform state (i.e. without updating 
-  `main.tf` and re-applying)
+All other SSM parameters (TC_API_URL, TC_SEARCH_ID, TC_USERNAME, DATABASE_URL, DATABASE_USERNAME, 
+BATCH_*) are populated directly from `main.tf` values.
 
+## Secret and parameter updates
+
+To update any of the secrets or parameters, simply update the relevant SSM parameter directly in 
+the AWS console.
+
+Then restart the ECS service to pick up the new values.
+
+ECS tasks that restart (scaling, crashes, deployments) automatically fetch the current SSM values 
+without needing to re-run Terraform.
