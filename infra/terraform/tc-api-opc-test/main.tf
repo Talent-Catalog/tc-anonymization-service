@@ -31,16 +31,16 @@ module tc-opc-test {
   dns_namespace       = "tc-api.local"
   site_domain         = "test.api.plus.tctalent.org"
 
-  # SSM-backed (stored and managed in SSM, injected into ECS) – set via ssm-parameters.sh
-  tc_api_url              = "https://test.plus.tctalent.org/api/admin"
+  # SSM-backed (stored in SSM, injected into ECS task)
+  tc_api_url          = "https://test.plus.tctalent.org/api/admin"
   tc_search_id        = 2682
   tc_username         = "tc-api"
-  tc_password         = "" # set via ssm-parameters.sh
-  database_password   = "" # set via ssm-parameters.sh; must match RDS if set
+  tc_password         = "" # pass via -var 'tc_password=...' (see README)
+  database_password   = "" # pass via -var 'database_password=...' (see README)
   doc_db_cluster_name = "staging.c8pam.mongodb.net"
   doc_db_name         = "tcapi"
   doc_db_user_name    = "tcapi"
-  doc_db_password          = "" # set via ssm-parameters.sh
+  doc_db_password     = "" # pass via -var 'doc_db_password=...' (see README)
   batch_chunk_size         = "20"
   batch_page_size          = "20"
   batch_max_read_skips     = "10"
