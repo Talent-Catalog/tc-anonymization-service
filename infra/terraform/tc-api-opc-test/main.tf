@@ -1,3 +1,25 @@
+# Secrets passed via -var at apply time
+variable "database_password" {
+  description = "RDS Aurora master password"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "doc_db_password" {
+  description = "MongoDB Atlas password"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "tc_password" {
+  description = "Talent Catalog API password"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 # Configure the AWS provider
 # NOTE: Provider configuration MUST remain here (cannot be moved to parent module).
 # Providers cannot have configuration parameters injected via module variables.
@@ -35,12 +57,12 @@ module tc-opc-test {
   tc_api_url          = "https://test.plus.tctalent.org/api/admin"
   tc_search_id        = 2682
   tc_username         = "tc-api"
-  tc_password         = "" # pass via -var 'tc_password=...' (see README)
-  database_password   = "" # pass via -var 'database_password=...' (see README)
+  tc_password         = var.tc_password
+  database_password   = var.database_password
   doc_db_cluster_name = "staging.c8pam.mongodb.net"
   doc_db_name         = "tcapi"
   doc_db_user_name    = "tcapi"
-  doc_db_password     = "" # pass via -var 'doc_db_password=...' (see README)
+  doc_db_password     = var.doc_db_password
   batch_chunk_size         = "20"
   batch_page_size          = "20"
   batch_max_read_skips     = "10"
