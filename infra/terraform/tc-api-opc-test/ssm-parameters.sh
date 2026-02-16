@@ -39,7 +39,7 @@ put_string() {
     --value "$2" \
     --type "String" \
     --region "$REGION" \
-    --overwrite
+    --overwrite >/dev/null
 }
 
 put_secure() {
@@ -48,7 +48,7 @@ put_secure() {
     --value "$2" \
     --type "SecureString" \
     --region "$REGION" \
-    --overwrite
+    --overwrite >/dev/null
 }
 
 # TC service
