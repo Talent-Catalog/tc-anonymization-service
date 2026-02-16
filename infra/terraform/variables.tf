@@ -77,16 +77,16 @@ variable "tc_api_url" {
   description = "Talent Catalog core service URL (TC_API_URL in SSM)"
 }
 
-variable "tc_api_search_id" {
-  description = "Talent Catalog search id used by tc-api (TC_API_SEARCH_ID in SSM)"
+variable "tc_search_id" {
+  description = "Talent Catalog search id (TC_SEARCH_ID in SSM)"
 }
 
-variable "tc_api_username" {
-  description = "Talent Catalog username used by tc-api (TC_API_USERNAME in SSM)"
+variable "tc_username" {
+  description = "Talent Catalog username (TC_USERNAME in SSM)"
 }
 
-variable "tc_api_password" {
-  description = "Talent Catalog API password (TC_API_PASSWORD in SSM as SecureString)"
+variable "tc_password" {
+  description = "Talent Catalog password (TC_PASSWORD in SSM as SecureString)"
   type        = string
   sensitive   = true
   default     = ""

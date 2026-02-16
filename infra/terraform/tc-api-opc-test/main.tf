@@ -32,10 +32,10 @@ module tc-opc-test {
   site_domain         = "test.api.plus.tctalent.org"
 
   # SSM-backed (stored and managed in SSM, injected into ECS) – set via ssm-parameters.sh
-  tc_api_url       = "https://tctalent-test.org/api/admin"
-  tc_api_search_id = 2682
-  tc_api_username  = "tc-api"
-  tc_api_password     = "" # set via ssm-parameters.sh
+  tc_api_url              = "https://tctalent-test.org/api/admin"
+  tc_search_id        = 2682
+  tc_username         = "tc-api"
+  tc_password         = "" # set via ssm-parameters.sh
   database_password   = "" # set via ssm-parameters.sh; must match RDS if set
   doc_db_cluster_name = "staging.c8pam.mongodb.net"
   doc_db_name         = "tcapi"

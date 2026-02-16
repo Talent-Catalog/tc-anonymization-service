@@ -16,22 +16,22 @@ resource "aws_ssm_parameter" "tc_api_url" {
   value = var.tc_api_url
 }
 
-resource "aws_ssm_parameter" "tc_api_search_id" {
-  name  = "${local.ssm_prefix}/TC_API_SEARCH_ID"
+resource "aws_ssm_parameter" "tc_search_id" {
+  name  = "${local.ssm_prefix}/TC_SEARCH_ID"
   type  = "String"
-  value = tostring(var.tc_api_search_id)
+  value = tostring(var.tc_search_id)
 }
 
-resource "aws_ssm_parameter" "tc_api_username" {
-  name  = "${local.ssm_prefix}/TC_API_USERNAME"
+resource "aws_ssm_parameter" "tc_username" {
+  name  = "${local.ssm_prefix}/TC_USERNAME"
   type  = "String"
-  value = var.tc_api_username
+  value = var.tc_username
 }
 
-resource "aws_ssm_parameter" "tc_api_password" {
-  name  = "${local.ssm_prefix}/TC_API_PASSWORD"
+resource "aws_ssm_parameter" "tc_password" {
+  name  = "${local.ssm_prefix}/TC_PASSWORD"
   type  = "SecureString"
-  value = var.tc_api_password
+  value = var.tc_password
 }
 
 # Database (PostgreSQL) – URL is computed after RDS is available

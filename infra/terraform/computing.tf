@@ -61,9 +61,9 @@ module "ecs_service" {
   # Allow task execution role to read SSM parameters (injected as secrets)
   task_exec_ssm_param_arns = [
     aws_ssm_parameter.tc_api_url.arn,
-    aws_ssm_parameter.tc_api_search_id.arn,
-    aws_ssm_parameter.tc_api_username.arn,
-    aws_ssm_parameter.tc_api_password.arn,
+    aws_ssm_parameter.tc_search_id.arn,
+    aws_ssm_parameter.tc_username.arn,
+    aws_ssm_parameter.tc_password.arn,
     aws_ssm_parameter.database_url.arn,
     aws_ssm_parameter.database_username.arn,
     aws_ssm_parameter.database_password.arn,
@@ -99,9 +99,9 @@ module "ecs_service" {
       # Env var names must match application.yml ${...} placeholders exactly
       secrets = [
         { name = "TC_API_URL", valueFrom = aws_ssm_parameter.tc_api_url.arn },
-        { name = "TC_SEARCH_ID", valueFrom = aws_ssm_parameter.tc_api_search_id.arn },
-        { name = "TC_USERNAME", valueFrom = aws_ssm_parameter.tc_api_username.arn },
-        { name = "TC_PASSWORD", valueFrom = aws_ssm_parameter.tc_api_password.arn },
+        { name = "TC_SEARCH_ID", valueFrom = aws_ssm_parameter.tc_search_id.arn },
+        { name = "TC_USERNAME", valueFrom = aws_ssm_parameter.tc_username.arn },
+        { name = "TC_PASSWORD", valueFrom = aws_ssm_parameter.tc_password.arn },
         { name = "DATABASE_URL", valueFrom = aws_ssm_parameter.database_url.arn },
         { name = "DATABASE_USERNAME", valueFrom = aws_ssm_parameter.database_username.arn },
         { name = "DATABASE_PASSWORD", valueFrom = aws_ssm_parameter.database_password.arn },
