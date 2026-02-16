@@ -3,11 +3,35 @@
 # Path prefix: /tc-api/opc-staging/
 # Replace placeholder values with real secrets; run with AWS profile/role for OPC staging account.
 # Usage: ./ssm-parameters.sh   (or source and set REGION/PREFIX first)
+#   REGION=eu-west-2 PREFIX=/tc-plus/opc-staging/tc-api ./ssm-parameters.sh
 
 set -euo pipefail
 
 REGION="${REGION:-eu-west-2}"
 PREFIX="${PREFIX:-/tc-api/opc-staging}"
+
+# Safety check: set expected account id in env
+EXPECTED_ACCOUNT_ID="${EXPECTED_ACCOUNT_ID:-164804461258}"
+
+require_not_placeholder() {
+  local name="$1"
+  local value="$2"
+  if [[ "$value" == "REPLACE_ME" || -z "$value" ]]; then
+    echo "ERROR: Refusing to set $name to placeholder/empty value. Provide a real value." >&2
+    exit 1
+  fi
+}
+
+# Safety check: verify we're in the expected AWS account
+whoami_check() {
+  local acct
+  acct="$(aws sts get-caller-identity --region "$REGION" --query Account --output text)"
+  echo "AWS Account: $acct  Region: $REGION  Prefix: $PREFIX"
+  if [[ -n "$EXPECTED_ACCOUNT_ID" && "$acct" != "$EXPECTED_ACCOUNT_ID" ]]; then
+    echo "ERROR: Expected account $EXPECTED_ACCOUNT_ID but got $acct. Aborting." >&2
+    exit 1
+  fi
+}
 
 put_string() {
   aws ssm put-parameter \
