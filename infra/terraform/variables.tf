@@ -118,12 +118,22 @@ variable "doc_db_password" {
   default     = ""
 }
 
-variable "batch_size" {
-  description = "Batch size for batch jobs (BATCH_SIZE in SSM)"
+variable "batch_chunk_size" {
+  description = "Batch chunk size (BATCH_CHUNK_SIZE in SSM)"
   type        = string
 }
 
-variable "batch_interval_ms" {
-  description = "Batch interval in ms (BATCH_INTERVAL_MS in SSM)"
+variable "batch_page_size" {
+  description = "Batch page size (BATCH_PAGE_SIZE in SSM)"
+  type        = string
+}
+
+variable "batch_max_read_skips" {
+  description = "Max read skips for batch jobs (BATCH_MAX_READ_SKIPS in SSM)"
+  type        = string
+}
+
+variable "batch_fetch_delay_millis" {
+  description = "Fetch delay in ms for batch jobs (BATCH_FETCH_DELAY_MILLIS in SSM)"
   type        = string
 }

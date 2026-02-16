@@ -68,15 +68,27 @@ resource "aws_ssm_parameter" "mongo_url" {
   )
 }
 
-# BATCH_* tuning parameters
-resource "aws_ssm_parameter" "batch_size" {
-  name  = "${local.ssm_prefix}/BATCH_SIZE"
+# Batch tuning parameters
+resource "aws_ssm_parameter" "batch_chunk_size" {
+  name  = "${local.ssm_prefix}/BATCH_CHUNK_SIZE"
   type  = "String"
-  value = var.batch_size
+  value = var.batch_chunk_size
 }
 
-resource "aws_ssm_parameter" "batch_interval_ms" {
-  name  = "${local.ssm_prefix}/BATCH_INTERVAL_MS"
+resource "aws_ssm_parameter" "batch_page_size" {
+  name  = "${local.ssm_prefix}/BATCH_PAGE_SIZE"
   type  = "String"
-  value = var.batch_interval_ms
+  value = var.batch_page_size
+}
+
+resource "aws_ssm_parameter" "batch_max_read_skips" {
+  name  = "${local.ssm_prefix}/BATCH_MAX_READ_SKIPS"
+  type  = "String"
+  value = var.batch_max_read_skips
+}
+
+resource "aws_ssm_parameter" "batch_fetch_delay_millis" {
+  name  = "${local.ssm_prefix}/BATCH_FETCH_DELAY_MILLIS"
+  type  = "String"
+  value = var.batch_fetch_delay_millis
 }

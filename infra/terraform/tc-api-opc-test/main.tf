@@ -40,9 +40,11 @@ module tc-opc-test {
   doc_db_cluster_name = "staging.c8pam.mongodb.net"
   doc_db_name         = "tcapi"
   doc_db_user_name    = "tcapi"
-  doc_db_password     = "" # set via ssm-parameters.sh
-  batch_size          = "100"
-  batch_interval_ms   = "5000"
+  doc_db_password          = "" # set via ssm-parameters.sh
+  batch_chunk_size         = "20"
+  batch_page_size          = "20"
+  batch_max_read_skips     = "10"
+  batch_fetch_delay_millis = "1000"
 }
 
 # Configure the opc-staging terraform workspace

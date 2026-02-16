@@ -68,8 +68,10 @@ module "ecs_service" {
     aws_ssm_parameter.database_username.arn,
     aws_ssm_parameter.database_password.arn,
     aws_ssm_parameter.mongo_url.arn,
-    aws_ssm_parameter.batch_size.arn,
-    aws_ssm_parameter.batch_interval_ms.arn,
+    aws_ssm_parameter.batch_chunk_size.arn,
+    aws_ssm_parameter.batch_page_size.arn,
+    aws_ssm_parameter.batch_max_read_skips.arn,
+    aws_ssm_parameter.batch_fetch_delay_millis.arn,
   ]
 
   # Enables ECS Exec
@@ -94,17 +96,20 @@ module "ecs_service" {
       ]
 
       # Injected from SSM (path: /${var.project_name}/${var.environment}/...)
+      # Env var names must match application.yml ${...} placeholders exactly
       secrets = [
         { name = "TC_API_URL", valueFrom = aws_ssm_parameter.tc_api_url.arn },
         { name = "TC_SEARCH_ID", valueFrom = aws_ssm_parameter.tc_api_search_id.arn },
-        { name = "TC_API_USERNAME", valueFrom = aws_ssm_parameter.tc_api_username.arn },
+        { name = "TC_USERNAME", valueFrom = aws_ssm_parameter.tc_api_username.arn },
         { name = "TC_PASSWORD", valueFrom = aws_ssm_parameter.tc_api_password.arn },
         { name = "DATABASE_URL", valueFrom = aws_ssm_parameter.database_url.arn },
         { name = "DATABASE_USERNAME", valueFrom = aws_ssm_parameter.database_username.arn },
         { name = "DATABASE_PASSWORD", valueFrom = aws_ssm_parameter.database_password.arn },
         { name = "MONGO_URL", valueFrom = aws_ssm_parameter.mongo_url.arn },
-        { name = "BATCH_SIZE", valueFrom = aws_ssm_parameter.batch_size.arn },
-        { name = "BATCH_INTERVAL_MS", valueFrom = aws_ssm_parameter.batch_interval_ms.arn },
+        { name = "BATCH_CHUNK_SIZE", valueFrom = aws_ssm_parameter.batch_chunk_size.arn },
+        { name = "BATCH_PAGE_SIZE", valueFrom = aws_ssm_parameter.batch_page_size.arn },
+        { name = "BATCH_MAX_READ_SKIPS", valueFrom = aws_ssm_parameter.batch_max_read_skips.arn },
+        { name = "BATCH_FETCH_DELAY_MILLIS", valueFrom = aws_ssm_parameter.batch_fetch_delay_millis.arn },
       ]
 
       # Example image used requires access to write to root filesystem
