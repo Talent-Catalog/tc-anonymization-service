@@ -70,16 +70,12 @@ resource "aws_ssm_parameter" "mongo_url" {
 
 # BATCH_* tuning parameters
 resource "aws_ssm_parameter" "batch_size" {
-  count = var.batch_size != "" ? 1 : 0
-
   name  = "${local.ssm_prefix}/BATCH_SIZE"
   type  = "String"
   value = var.batch_size
 }
 
 resource "aws_ssm_parameter" "batch_interval_ms" {
-  count = var.batch_interval_ms != "" ? 1 : 0
-
   name  = "${local.ssm_prefix}/BATCH_INTERVAL_MS"
   type  = "String"
   value = var.batch_interval_ms
