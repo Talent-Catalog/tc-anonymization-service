@@ -18,7 +18,7 @@ terraform init
 
 ## 2. Set secrets
 
-Edit `secrets.auto.tfvars` in this directory with the real password values:
+Create/edit `secrets.auto.tfvars` in this directory with the real password values:
 
 ```hcl
 database_password = "..."
