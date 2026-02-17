@@ -1,4 +1,4 @@
-# Secrets passed via -var at apply time
+# Secrets loaded from secrets.auto.tfvars and passed through to the child module
 variable "database_password" {
   description = "RDS Aurora master password"
   type        = string
