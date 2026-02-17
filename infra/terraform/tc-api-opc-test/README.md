@@ -16,18 +16,22 @@ cd infra/terraform/tc-api-opc-test
 terraform init
 ```
 
-## 2. Deploy infrastructure
+## 2. Set secrets
 
-Pass the three secrets at apply time. Terraform sets them on the relevant resources (RDS, SSM) in 
-one step -- no manual SSM commands needed afterwards.
+Edit `secrets.auto.tfvars` in this directory with the real password values:
+
+```hcl
+database_password = "..."
+doc_db_password   = "..."
+tc_password       = "..."
+```
+
+This file is git-ignored and auto-loaded by Terraform. **Do not commit it.**
+
+## 3. Deploy infrastructure
 
 ```bash
-terraform plan \
-  -var 'database_password=<db-password>' \
-  -var 'doc_db_password=<mongo-password>' \
-  -var 'tc_password=<tc-password>' \
-  -out tfplan
-
+terraform plan -out tfplan
 terraform apply tfplan
 ```
 
@@ -43,8 +47,8 @@ BATCH_*) are populated directly from `main.tf` values.
 
 ## Secret and parameter updates
 
-To update any of the secrets or parameters, simply update the relevant SSM parameter directly in 
-the AWS console.
+To update any of the secrets or parameters, simply update the relevant SSM parameter directly in the 
+AWS console.
 
 Then restart the ECS service to pick up the new values.
 
