@@ -41,7 +41,7 @@ module tc-opc-test {
   project_name        = "tc-api"
   project_description = "OPC staging setup for tc-api"
   environment         = "opc-staging"
-  image_tag           = "1.0.1-SNAPSHOT"
+  image_tag           = "tc-api-staging"
   fargate_cpu         = 512
   fargate_memory      = 2048
   app_port            = 8082
