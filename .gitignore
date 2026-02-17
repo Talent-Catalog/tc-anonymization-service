@@ -10,6 +10,7 @@ build/
 *.tfstate
 *.tfstate.*
 tfplan
+secrets.auto.tfvars
 
 ### STS ###
 .apt_generated
