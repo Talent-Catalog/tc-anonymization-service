@@ -150,6 +150,10 @@ jib {
             image = "231168606641.dkr.ecr.us-east-1.amazonaws.com/tc-api"
         } else if (project.hasProperty("prod-tc-system")) {
             image = "968457613372.dkr.ecr.us-east-1.amazonaws.com/tc-api"
+        } else if (project.hasProperty("opc-staging")) {
+            image = "164804461258.dkr.ecr.eu-west-2.amazonaws.com/tc-api:tc-api-staging"
+        } else if (project.hasProperty("opc-prod")) {
+            image = "289896345557.dkr.ecr.eu-west-2.amazonaws.com/tc-api:tc-api-prod"
         }
         tags = ["latest", version]
         credHelper = 'ecr-login'

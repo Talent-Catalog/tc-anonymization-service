@@ -9,8 +9,8 @@ on:
     branches: [ staging ]
 
 jobs:
-  build:
-
+  build-and-deploy:
+    name: Build, Test and Deploy to Staging
     runs-on: ubuntu-latest
 
     steps:
@@ -29,15 +29,31 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      # --- Build and Test ---
+
+      - name: Build and test with Gradle
+        run: ./gradlew build
+
+      # --- Deploy to TBB Staging (us-east-1) ---
+
+      - name: Configure AWS credentials for TBB
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_TEST }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_TEST }}
           aws-region: us-east-1
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Deploy with Jib
+        run: ./gradlew jib -Ptest-tc-system -x test
+
+      # --- Deploy to OPC Staging (eu-west-2) ---
+
+      - name: Configure AWS credentials for OPC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_OPC_STAGING }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_OPC_STAGING }}
+          aws-region: eu-west-2
 
       - name: Deploy with Jib
-        run: ./gradlew jib -Ptest-tc-system
+        run: ./gradlew jib -Popc-staging -x test

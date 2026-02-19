@@ -1,4 +1,6 @@
-# variables.tf
+# -----------------------------------------------------------------------------
+# Kept as Terraform module inputs (infra / config)
+# -----------------------------------------------------------------------------
 
 variable "project_name" {
   description = "Name of project - all resources will be named based on this"
@@ -6,6 +8,11 @@ variable "project_name" {
 
 variable "project_description" {
   description = "Description of project"
+}
+
+variable "environment" {
+  description = "Environment name used in SSM parameter paths (e.g. opc-staging, test, prod)"
+  default     = "staging"
 }
 
 variable "aws_region" {
@@ -18,7 +25,6 @@ variable "image_tag" {
   default     = "latest"
 }
 
-
 variable "app_port" {
   description = "Port exposed by the docker image to redirect traffic to"
   default     = 8088
@@ -26,43 +32,6 @@ variable "app_port" {
 
 variable "health_check_path" {
   default = "/"
-}
-
-variable "db_name" {
-  description = "Name of the database"
-}
-
-variable "db_user_name" {
-  description = "Data base user name"
-}
-
-variable "db_version" {
-  description = "Version of the database engine"
-}
-
-variable "db_instance_class" {
-  description = "Instance class of database - see https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.Summary.html"
-  default = "db.t3.micro"
-}
-
-variable "doc_db_name" {
-  description = "Name of the document database"
-}
-
-variable "doc_db_user_name" {
-  description = "Doc data base user name"
-}
-
-variable "doc_db_password" {
-  description = "Doc data base password"
-}
-
-variable "doc_db_cluster_name" {
-  description = "Cluster name of the document database"
-}
-
-variable "dns_namespace" {
-  description = "Private DNS namespace"
 }
 
 variable "fargate_cpu" {
@@ -75,18 +44,96 @@ variable "fargate_memory" {
   default     = "4096"
 }
 
+variable "db_name" {
+  description = "Name of the database"
+}
+
+variable "db_user_name" {
+  description = "Database user name"
+}
+
+variable "db_version" {
+  description = "Version of the database engine"
+}
+
+variable "db_instance_class" {
+  description = "Instance class of database - see https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.Summary.html"
+  default     = "db.t3.micro"
+}
+
+variable "dns_namespace" {
+  description = "Private DNS namespace"
+}
+
+variable "site_domain" {
+  description = "The domain name for the ACM certificate (e.g. skills.staging.example.org)"
+}
+
+# -----------------------------------------------------------------------------
+# SSM-backed config and secrets (stored in SSM, injected into ECS task)
+# -----------------------------------------------------------------------------
+
 variable "tc_api_url" {
-  description = "Talent Catalog core service URL"
+  description = "Talent Catalog core service URL (TC_API_URL in SSM)"
 }
 
-variable "tc_api_search_id" {
-  description = "Talent Catalog search id used by tc-api"
+variable "tc_search_id" {
+  description = "Talent Catalog search id (TC_SEARCH_ID in SSM)"
 }
 
-variable "tc_api_username" {
-  description = "Talent Catalog username used by tc-api"
+variable "tc_username" {
+  description = "Talent Catalog username (TC_USERNAME in SSM)"
 }
 
-variable "acm_certificate_arn" {
-  description = "The ARN of an ACM certificate"
+variable "tc_password" {
+  description = "Talent Catalog password (TC_PASSWORD in SSM as SecureString)"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "database_password" {
+  description = "RDS Aurora master password (DATABASE_PASSWORD in SSM as SecureString, used by RDS and ECS)"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "doc_db_cluster_name" {
+  description = "MongoDB Atlas cluster hostname (used to build MONGO_URL in SSM)"
+}
+
+variable "doc_db_name" {
+  description = "MongoDB database name (used to build MONGO_URL in SSM)"
+}
+
+variable "doc_db_user_name" {
+  description = "MongoDB user name (used to build MONGO_URL in SSM)"
+}
+
+variable "doc_db_password" {
+  description = "MongoDB Atlas password (stored in SSM SecureString, used to build MONGO_URL)"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "batch_chunk_size" {
+  description = "Batch chunk size (BATCH_CHUNK_SIZE in SSM)"
+  type        = string
+}
+
+variable "batch_page_size" {
+  description = "Batch page size (BATCH_PAGE_SIZE in SSM)"
+  type        = string
+}
+
+variable "batch_max_read_skips" {
+  description = "Max read skips for batch jobs (BATCH_MAX_READ_SKIPS in SSM)"
+  type        = string
+}
+
+variable "batch_fetch_delay_millis" {
+  description = "Fetch delay in ms for batch jobs (BATCH_FETCH_DELAY_MILLIS in SSM)"
+  type        = string
 }
