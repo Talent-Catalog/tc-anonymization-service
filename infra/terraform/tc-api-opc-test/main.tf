@@ -34,7 +34,7 @@ provider "aws" {
 }
 
 # tc-api infrastructure for OPC AWS staging account
-module tc-opc-test {
+module "tc-opc-test" {
   source = "./.."
 
   # Provided as Terraform inputs
