@@ -41,6 +41,7 @@ module "tc-opc-test" {
   project_name        = "tc-api"
   project_description = "OPC staging setup for tc-api"
   environment         = "opc-staging"
+  aws_region          = "eu-west-2"
   image_tag           = "tc-api-staging"
   fargate_cpu         = 512
   fargate_memory      = 2048

@@ -41,6 +41,7 @@ module "tc-opc-prod" {
   project_name        = "tc-api"
   project_description = "OPC production setup for tc-api"
   environment         = "opc-prod"
+  aws_region          = "eu-west-2"
   image_tag           = "tc-api-prod"
   fargate_cpu         = 512
   fargate_memory      = 2048
