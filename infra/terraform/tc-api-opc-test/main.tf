@@ -55,7 +55,7 @@ module "tc-opc-test" {
   site_domain         = "test.api.tctalent.org"
 
   # SSM-backed (stored in SSM, injected into ECS task)
-  tc_api_url          = "https://test.plus.tctalent.org/api/admin"
+  tc_api_url          = "https://tctalent-test.org/api/admin"
   tc_search_id        = 2682
   tc_username         = "tc-api"
   tc_password         = var.tc_password
