@@ -52,7 +52,7 @@ module "tc-opc-test" {
   db_instance_class   = "db.t3.medium"
   db_version          = "17.5"
   dns_namespace       = "tc-api.local"
-  site_domain         = "test.api.plus.tctalent.org"
+  site_domain         = "test.api.tctalent.org"
 
   # SSM-backed (stored in SSM, injected into ECS task)
   tc_api_url          = "https://test.plus.tctalent.org/api/admin"
